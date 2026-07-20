@@ -51,20 +51,24 @@ The complete local/CI release gate is `npm run ci:queens`.
 3. **Inherited GitHub workflows.** Worker, Convex, package-publishing, scheduled,
    and desktop workflows were removed before the first push so this repository
    cannot request unrelated secrets or deploy upstream services.
-4. **Production branch drift.** Netlify production must remain `main`; staging
+4. **Inherited dependency automation.** The upstream Dependabot configuration
+   targeted Docker images and subprojects this site does not deploy. It was
+   removed to prevent unrelated update jobs and preview builds; dependency
+   updates remain deliberate until the Queens package surface is separated.
+5. **Production branch drift.** Netlify production must remain `main`; staging
    must be an explicit branch deploy. Never point the production site at
    `staging` to test a release.
-5. **Preview/prod configuration drift.** All Netlify contexts execute the same
+6. **Preview/prod configuration drift.** All Netlify contexts execute the same
    release gate. Context blocks may add environment values later, but must not
    substitute a different build command.
-6. **Stale HTML with fresh hashed assets.** HTML revalidates on every request;
+7. **Stale HTML with fresh hashed assets.** HTML revalidates on every request;
    only fingerprinted `/assets/*` files receive immutable caching.
-7. **Publishing the source root.** The integration check rejects inherited API,
+8. **Publishing the source root.** The integration check rejects inherited API,
    server, blog, or worker paths in the deploy artifact.
-8. **Manual production deploys bypassing Git.** Normal releases come from merges
+9. **Manual production deploys bypassing Git.** Normal releases come from merges
    to `main`. A CLI deploy is for diagnosis only unless an incident explicitly
    requires a documented rollback.
-9. **Calendar snapshot assumptions.** The deployed event data is the committed
+10. **Calendar snapshot assumptions.** The deployed event data is the committed
    snapshot. Refresh it with `npm run sync:queens-calendar`, review the diff, and
    promote it through the same preview → staging → production loop.
 
