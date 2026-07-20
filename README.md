@@ -1,5 +1,10 @@
 # Queens World Monitor — MBIQ
 
+[![Queens Monitor CI](https://github.com/ChaiWithJai/queens-world-monitor/actions/workflows/queens-monitor-ci.yml/badge.svg)](https://github.com/ChaiWithJai/queens-world-monitor/actions/workflows/queens-monitor-ci.yml)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/1ebf5ff1-50f1-417f-b2a8-7be41103643d/deploy-status)](https://app.netlify.com/projects/queens-world-monitor/deploys)
+
+**[Production](https://queens-world-monitor.netlify.app)** · **[Staging](https://staging--queens-world-monitor.netlify.app)** · [Release loop](docs/netlify-release-loop.md)
+
 **A street-to-world story monitor for Queens.** Search a neighborhood, address, person, or theme to see how a specific Queens place connects to New York City, the United States, and the world—then see current events nearby from the sibling [Queens Calendar](https://queens-calendar.netlify.app).
 
 This repository is an independent sibling project derived from [World Monitor](https://github.com/koala73/worldmonitor). It preserves the upstream AGPL-3.0 license and attribution; see [NOTICE-QUEENS.md](NOTICE-QUEENS.md).
@@ -28,12 +33,10 @@ npm run build:queens
 
 The standalone build is written to `dist-queens/`. The wider upstream World Monitor application remains available for architectural reference and future reuse.
 
-Run the focused release checks with:
+Run the complete focused release gate with:
 
 ```bash
-npm run test:queens
-npm run typecheck
-npm run build:queens
+npm run ci:queens
 ```
 
 The build is a secret-free static site and emits both `dist-queens/index.html` and `dist-queens/queens.html`. See [the product and content guide](docs/queens-monitor-product.md) for the record standard, calendar data flow, authoring checklist, and hosting notes.

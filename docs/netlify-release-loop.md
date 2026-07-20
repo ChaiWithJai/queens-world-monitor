@@ -8,9 +8,9 @@ same locked source can produce the standalone artifact.
 
 | Environment | Git source | Netlify context | Purpose |
 | --- | --- | --- | --- |
-| Deploy preview | Pull request into `staging` or `main` | `deploy-preview` | Review a proposed change at an immutable PR URL. |
-| Staging | `staging` branch | `branch-deploy` / `staging` | Stable acceptance URL before production promotion. |
-| Production | `main` branch | `production` | Public release URL. |
+| Deploy preview | Pull request into `staging` or `main` | `deploy-preview` | Review at `deploy-preview-<PR>--queens-world-monitor.netlify.app`. |
+| Staging | `staging` branch | `branch-deploy` / `staging` | Stable acceptance at `staging--queens-world-monitor.netlify.app`. |
+| Production | `main` branch | `production` | Public release at `queens-world-monitor.netlify.app`. |
 
 Promotion is merge-based: feature branch → PR → `staging` → acceptance → PR →
 `main`. Do not deploy a local dirty worktree to production. Netlify deploy IDs
