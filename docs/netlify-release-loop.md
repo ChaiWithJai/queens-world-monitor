@@ -63,12 +63,16 @@ The complete local/CI release gate is `npm run ci:queens`.
    substitute a different build command.
 7. **Stale HTML with fresh hashed assets.** HTML revalidates on every request;
    only fingerprinted `/assets/*` files receive immutable caching.
-8. **Publishing the source root.** The integration check rejects inherited API,
+8. **Indexable staging branch.** Netlify automatically marks deploy previews as
+   `noindex`, but a current branch deploy can be indexed. Non-production builds
+   emit `X-Robots-Tag: noindex, nofollow`; the production artifact check rejects
+   that file so the directive cannot leak onto the public site.
+9. **Publishing the source root.** The integration check rejects inherited API,
    server, blog, or worker paths in the deploy artifact.
-9. **Manual production deploys bypassing Git.** Normal releases come from merges
+10. **Manual production deploys bypassing Git.** Normal releases come from merges
    to `main`. A CLI deploy is for diagnosis only unless an incident explicitly
    requires a documented rollback.
-10. **Calendar snapshot assumptions.** The deployed event data is the committed
+11. **Calendar snapshot assumptions.** The deployed event data is the committed
    snapshot. Refresh it with `npm run sync:queens-calendar`, review the diff, and
    promote it through the same preview → staging → production loop.
 

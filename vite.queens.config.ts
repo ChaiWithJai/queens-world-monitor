@@ -1,4 +1,4 @@
-import { copyFileSync } from 'node:fs';
+import { copyFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { defineConfig, type Plugin } from 'vite';
 
@@ -9,6 +9,13 @@ const emitRootIndex = (): Plugin => ({
       resolve(__dirname, 'dist-queens/queens.html'),
       resolve(__dirname, 'dist-queens/index.html'),
     );
+
+    if (process.env.CONTEXT && process.env.CONTEXT !== 'production') {
+      writeFileSync(
+        resolve(__dirname, 'dist-queens/_headers'),
+        '/*\n  X-Robots-Tag: noindex, nofollow\n',
+      );
+    }
   },
 });
 
