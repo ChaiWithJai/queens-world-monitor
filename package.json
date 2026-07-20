@@ -57,6 +57,8 @@
     "prebuild": "npm run build:openapi && npm run build:agent-skills",
     "build": "npm run security:vite-env-secrets -- --strict-local && npm run build:blog && npm run build:crawlable-corpus && npm run build:content-corpus && tsc && vite build",
     "build:queens": "vite build --config vite.queens.config.ts",
+    "check:queens-build": "node scripts/check-queens-build.mjs",
+    "ci:queens": "npm run test:queens && npm run typecheck && npm run build:queens && npm run check:queens-build",
     "sync:queens-calendar": "node scripts/sync-queens-calendar.mjs",
     "test:queens": "tsx --test tests/queens-monitor.test.mts",
     "build:sidecar-sebuf": "node scripts/build-sidecar-sebuf.mjs",

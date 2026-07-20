@@ -1,0 +1,43 @@
+[build]
+  command = "npm run ci:queens"
+  publish = "dist-queens"
+
+[build.environment]
+  NODE_VERSION = "24"
+  NPM_FLAGS = "--ignore-scripts"
+  QUEENS_MONITOR_DEPLOY = "true"
+
+[context.production]
+  command = "npm run ci:queens"
+
+[context.staging]
+  command = "npm run ci:queens"
+
+[context.deploy-preview]
+  command = "npm run ci:queens"
+
+[context.branch-deploy]
+  command = "npm run ci:queens"
+
+[[redirects]]
+  from = "/queens.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
