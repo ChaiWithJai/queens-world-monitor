@@ -2,10 +2,11 @@ import maplibregl, { type GeoJSONSource, type MapLayerMouseEvent } from 'maplibr
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './styles/queens-monitor.css';
 import calendarSnapshot from './queens/data/calendar-events.json';
+import { neighborhoodAreas, neighborhoodCoverageSource } from './queens/data/neighborhoods';
 import { people, stories } from './queens/data/stories';
-import type { CalendarEvent, PersonProfile, QueensStory, WorldConnection } from './queens/types';
+import type { CalendarEvent, NeighborhoodArea, PersonProfile, QueensStory, WorldConnection } from './queens/types';
 
-type Mode = 'stories' | 'people' | 'world' | 'events';
+type Mode = 'stories' | 'people' | 'world' | 'events' | 'coverage';
 type Selection = { kind: Mode; id: string; storyId?: string };
 type WorldRecord = WorldConnection & { storyId: string; storyTitle: string; neighborhood: string };
 
@@ -15,6 +16,11 @@ const upcomingEvents = calendarEvents.filter((event) => new Date(event.endDate).
 const worldRecords: WorldRecord[] = stories.flatMap((story) =>
   story.connections.map((connection) => ({ ...connection, storyId: story.id, storyTitle: story.title, neighborhood: story.neighborhood })),
 );
+const storiesByCoverageId = new Map<string, QueensStory[]>();
+stories.forEach((story) => story.coverageAreaIds.forEach((areaId) => {
+  storiesByCoverageId.set(areaId, [...(storiesByCoverageId.get(areaId) ?? []), story]);
+}));
+const coveredAreaIds = new Set(storiesByCoverageId.keys());
 
 const required = <T extends Element>(selector: string): T => {
   const node = document.querySelector<T>(selector);
@@ -64,11 +70,12 @@ const resultLabel = required<HTMLElement>('#result-label');
 const resultCount = required<HTMLElement>('#result-count');
 const detailNode = required<HTMLElement>('#detail-content');
 const detailPanel = required<HTMLElement>('#story-detail');
+const detailLabel = required<HTMLElement>('#detail-label');
 const traceWorldButton = required<HTMLButtonElement>('#trace-world');
 const eventRibbon = required<HTMLElement>('#event-ribbon');
 
 required('#story-count').textContent = String(stories.length);
-required('#neighborhood-count').textContent = String(new Set(stories.map((story) => story.neighborhood)).size);
+required('#neighborhood-count').textContent = `${coveredAreaIds.size}/${neighborhoodAreas.length}`;
 required('#people-count').textContent = String(people.length);
 required('#connection-count').textContent = String(worldRecords.length);
 required('#event-count').textContent = String(upcomingEvents.length);
@@ -200,6 +207,7 @@ const appendSourceLinks = (parent: HTMLElement | DocumentFragment, story: Queens
 };
 
 const renderStoryDetail = (story: QueensStory, focusPersonId?: string) => {
+  detailLabel.textContent = 'SELECTED STORY';
   const fragment = document.createDocumentFragment();
   const meta = create('div', 'qm-detail-meta');
   appendBadge(meta, story.scale, story.scale.toLocaleLowerCase());
@@ -271,6 +279,7 @@ const buildEventLink = (event: CalendarEvent) => {
 };
 
 const renderEventDetail = (event: CalendarEvent) => {
+  detailLabel.textContent = 'LIVE EVENT';
   const fragment = document.createDocumentFragment();
   const meta = create('div', 'qm-detail-meta');
   appendBadge(meta, 'LIVE EVENT', 'world');
@@ -292,6 +301,44 @@ const renderEventDetail = (event: CalendarEvent) => {
   detailNode.replaceChildren(fragment);
 };
 
+const renderCoverageDetail = (area: NeighborhoodArea) => {
+  detailLabel.textContent = 'COVERAGE STATUS';
+  const fragment = document.createDocumentFragment();
+  const meta = create('div', 'qm-detail-meta');
+  appendBadge(meta, 'STORY NEEDED', 'usa');
+  appendBadge(meta, area.id);
+  const address = create('div', 'qm-address');
+  address.append(
+    create('span', '', 'QUEENS COVERAGE AREA'),
+    create('strong', '', area.name),
+    create('small', '', `${coveredAreaIds.size} OF ${neighborhoodAreas.length} AREAS COVERED`),
+  );
+  const standard = create('section', 'qm-detail-section');
+  standard.append(
+    create('h3', '', 'What completes this area'),
+    create('p', '', 'Add a source-backed story tied to an exact street address, a recognizable person or event, and at least one connection to New York City, the United States, or the world.'),
+  );
+  const sourceSection = create('section', 'qm-detail-section');
+  sourceSection.append(create('h3', '', 'Coverage baseline'));
+  const sourceLink = create('a', 'qm-source-single', `${neighborhoodCoverageSource.publisher} · ${neighborhoodCoverageSource.title} ↗`);
+  sourceLink.href = neighborhoodCoverageSource.url;
+  sourceLink.target = '_blank';
+  sourceLink.rel = 'noreferrer';
+  sourceSection.append(
+    create('p', '', 'Neighborhood Tabulation Areas provide a consistent audit baseline. NYC Planning notes that their names and boundaries approximate neighborhoods and are not definitive or exhaustive.'),
+    sourceLink,
+  );
+  fragment.append(
+    meta,
+    create('h2', 'qm-detail-title', `${area.name} needs its street-to-world story`),
+    create('p', 'qm-detail-dek', 'This area is visible in the product backlog so borough-wide coverage can be measured rather than implied.'),
+    address,
+    standard,
+    sourceSection,
+  );
+  detailNode.replaceChildren(fragment);
+};
+
 const buildResultButton = (title: string, eyebrow: string, summary: string, onSelect: () => void, active = false) => {
   const button = create('button', `qm-result ${active ? 'is-active' : ''}`.trim());
   button.type = 'button';
@@ -305,7 +352,8 @@ const currentRecords = () => {
   if (mode === 'stories') return stories.filter((story) => normalize([story.title, story.dek, story.story, story.neighborhood, story.streetAddress, story.themes.join(' '), story.personIds.map((id) => personById.get(id)?.name).join(' ')].join(' ')).includes(query));
   if (mode === 'people') return people.filter((person) => normalize([person.name, person.role, person.significance, person.connections.join(' ')].join(' ')).includes(query));
   if (mode === 'world') return worldRecords.filter((record) => normalize([record.place, record.country, record.relationship, record.storyTitle, record.neighborhood].join(' ')).includes(query));
-  return upcomingEvents.filter((event) => eventSearchText(event).includes(query));
+  if (mode === 'events') return upcomingEvents.filter((event) => eventSearchText(event).includes(query));
+  return neighborhoodAreas.filter((area) => normalize([area.id, area.name, ...(storiesByCoverageId.get(area.id) ?? []).map((story) => `${story.title} ${story.streetAddress}`)].join(' ')).includes(query));
 };
 
 const renderResults = () => {
@@ -323,9 +371,19 @@ const renderResults = () => {
     } else if (mode === 'world') {
       const connection = record as WorldRecord;
       fragment.append(buildResultButton(`${connection.place}, ${connection.country}`, connection.neighborhood, connection.relationship, () => setSelection({ kind: 'world', id: connection.id, storyId: connection.storyId }), selection.kind === 'world' && selection.id === connection.id));
-    } else {
+    } else if (mode === 'events') {
       const event = record as CalendarEvent;
       fragment.append(buildResultButton(event.title, formatDate(event.startDate), `${event.venue.name} · ${event.venue.neighborhood}`, () => setSelection({ kind: 'events', id: event.id }), selection.kind === 'events' && selection.id === event.id));
+    } else {
+      const area = record as NeighborhoodArea;
+      const story = storiesByCoverageId.get(area.id)?.[0];
+      fragment.append(buildResultButton(
+        area.name,
+        story ? 'COVERED' : 'STORY NEEDED',
+        story ? story.streetAddress : `${area.id} · street-level research open`,
+        () => setSelection({ kind: 'coverage', id: area.id, storyId: story?.id }),
+        selection.kind === 'coverage' && selection.id === area.id,
+      ));
     }
   });
   if (records.length === 0) fragment.append(create('p', 'qm-empty', 'No match yet. Try a neighborhood, street, person, or broader theme.'));
@@ -341,6 +399,14 @@ const setSelection = (next: Selection) => {
       traceWorldButton.disabled = true;
       setConnectionMapData();
       map.flyTo({ center: [event.venue.longitude, event.venue.latitude], zoom: 14.2, duration: 1000 });
+    }
+  } else if (next.kind === 'coverage' && !next.storyId) {
+    const area = neighborhoodAreas.find((item) => item.id === next.id);
+    if (area) {
+      renderCoverageDetail(area);
+      traceWorldButton.disabled = true;
+      setConnectionMapData();
+      map.flyTo({ center: [-73.84, 40.73], zoom: 10.45, duration: 800 });
     }
   } else {
     const storyId = next.kind === 'stories' ? next.id : next.storyId;

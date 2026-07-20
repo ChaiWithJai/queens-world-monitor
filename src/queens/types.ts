@@ -30,6 +30,11 @@ export interface PersonProfile {
   source: SourceLink;
 }
 
+export interface NeighborhoodArea {
+  id: string;
+  name: string;
+}
+
 export interface QueensStory extends Coordinates {
   id: string;
   title: string;
@@ -37,6 +42,7 @@ export interface QueensStory extends Coordinates {
   story: string;
   whyItTravels: string;
   neighborhood: string;
+  coverageAreaIds: string[];
   streetAddress: string;
   years: string;
   scale: StoryScale;

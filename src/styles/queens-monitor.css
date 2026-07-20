@@ -65,6 +65,7 @@ a { color: inherit; text-decoration: none; }
 .qm-search-icon { color: var(--qm-lime); font-size: 1.2rem; }
 .qm-tabs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; margin: 0 .8rem .8rem; background: var(--qm-line); border: 1px solid var(--qm-line); }
 .qm-tabs button { min-height: 40px; color: var(--qm-muted); background: var(--qm-panel-2); border: 0; cursor: pointer; font-size: .67rem; font-weight: 700; letter-spacing: .06em; }
+.qm-tabs button:nth-child(5) { grid-column: 1 / -1; }
 .qm-tabs button[aria-selected='true'] { color: var(--qm-ink); background: var(--qm-lime); }
 .qm-result-meta { display: flex; justify-content: space-between; padding: .55rem .85rem; color: var(--qm-muted); border-block: 1px solid var(--qm-line); font-size: .58rem; letter-spacing: .12em; }
 .qm-results { flex: 1; min-height: 0; overflow-y: auto; scrollbar-color: #39525b transparent; }

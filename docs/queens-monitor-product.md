@@ -44,4 +44,6 @@ The source is an AGPL-3.0-only derivative of World Monitor. Preserve `LICENSE`, 
 
 ## Coverage standard
 
-The seed release intentionally favors well-supported records over speculative coverage. Borough-wide expansion should track neighborhood coverage explicitly and add only stories that meet the sourcing, address, and connection standards above.
+The product audits coverage against the 59 residential Queens Neighborhood Tabulation Areas in NYC Planning's 2020 NTA release 26B. NTAs are a repeatable baseline, not a definitive statement about neighborhood identity or boundaries; the interface preserves that caveat and supports searching the full coverage backlog.
+
+The seed release intentionally favors well-supported records over speculative coverage. Borough-wide expansion must add only stories that meet the sourcing, address, and connection standards above. Tests fail when stories reference unknown coverage IDs or omit coverage metadata.

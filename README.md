@@ -10,6 +10,7 @@ This repository is an independent sibling project derived from [World Monitor](h
 - Search across neighborhoods, globally recognized people, civic history, arts, music, sport, migration, and diplomacy
 - Visible connection lines from Queens to cities and institutions around the world
 - Source-backed story dossiers with related people and primary/institutional links
+- Searchable coverage accounting across all 59 residential Queens Neighborhood Tabulation Areas
 - A generated snapshot adapter for the separate Queens Calendar repository and production API
 - Responsive desktop, tablet, and phone layouts
 
@@ -50,7 +51,8 @@ Queens
 │   └── Related current events
 ├── People (recognized figures connected to one or more stories)
 ├── World ties (cities and institutions connected back to Queens)
-└── Events (live snapshot from Queens Calendar)
+├── Events (live snapshot from Queens Calendar)
+└── Coverage (covered stories and explicit research gaps across 59 NYC Planning areas)
 ```
 
 The intended journey is `search → place/story → world connection → related event`, with every primary record reachable within two interactions.

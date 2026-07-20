@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
+import { neighborhoodAreas } from '../src/queens/data/neighborhoods.ts';
 import { people, stories } from '../src/queens/data/stories.ts';
 import type { CalendarEvent } from '../src/queens/types.ts';
 
@@ -19,6 +20,19 @@ test('story records are unique, geocoded, sourced, and connected', () => {
     assert.ok(story.sources.length > 0, `${story.id} needs a source`);
     story.sources.forEach(({ url }) => assert.doesNotThrow(() => new URL(url)));
   }
+});
+
+test('coverage uses the complete residential Queens NTA baseline', () => {
+  assert.equal(neighborhoodAreas.length, 59);
+  assert.ok(unique(neighborhoodAreas.map(({ id }) => id)));
+  const validAreaIds = new Set(neighborhoodAreas.map(({ id }) => id));
+  const coveredAreaIds = new Set(stories.flatMap(({ coverageAreaIds }) => coverageAreaIds));
+
+  for (const story of stories) {
+    assert.ok(story.coverageAreaIds.length > 0, `${story.id} needs a coverage area`);
+    story.coverageAreaIds.forEach((id) => assert.ok(validAreaIds.has(id), `${story.id} references missing coverage area ${id}`));
+  }
+  assert.ok(coveredAreaIds.size >= 17);
 });
 
 test('people and story references are internally consistent', () => {
