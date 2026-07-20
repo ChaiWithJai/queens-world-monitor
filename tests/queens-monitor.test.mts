@@ -32,7 +32,7 @@ test('coverage uses the complete residential Queens NTA baseline', () => {
     assert.ok(story.coverageAreaIds.length > 0, `${story.id} needs a coverage area`);
     story.coverageAreaIds.forEach((id) => assert.ok(validAreaIds.has(id), `${story.id} references missing coverage area ${id}`));
   }
-  assert.ok(coveredAreaIds.size >= 17);
+  assert.ok(coveredAreaIds.size >= 24);
 });
 
 test('people and story references are internally consistent', () => {
