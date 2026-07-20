@@ -1,4 +1,63 @@
-# World Monitor
+# Queens World Monitor — MBIQ
+
+**A street-to-world story monitor for Queens.** Search a neighborhood, address, person, or theme to see how a specific Queens place connects to New York City, the United States, and the world—then see current events nearby from the sibling [Queens Calendar](https://queens-calendar.netlify.app).
+
+This repository is an independent sibling project derived from [World Monitor](https://github.com/koala73/worldmonitor). It preserves the upstream AGPL-3.0 license and attribution; see [NOTICE-QUEENS.md](NOTICE-QUEENS.md).
+
+## Queens product
+
+- Street-level story markers with addresses and coordinates
+- Search across neighborhoods, globally recognized people, civic history, arts, music, sport, migration, and diplomacy
+- Visible connection lines from Queens to cities and institutions around the world
+- Source-backed story dossiers with related people and primary/institutional links
+- A generated snapshot adapter for the separate Queens Calendar repository and production API
+- Responsive desktop, tablet, and phone layouts
+
+```bash
+npm ci --ignore-scripts
+npm run sync:queens-calendar
+npm run dev:queens
+```
+
+Production build:
+
+```bash
+npm run build:queens
+```
+
+The standalone build is written to `dist-queens/`. The wider upstream World Monitor application remains available for architectural reference and future reuse.
+
+Run the focused release checks with:
+
+```bash
+npm run test:queens
+npm run typecheck
+npm run build:queens
+```
+
+The build is a secret-free static site and emits both `dist-queens/index.html` and `dist-queens/queens.html`. See [the product and content guide](docs/queens-monitor-product.md) for the record standard, calendar data flow, authoring checklist, and hosting notes.
+
+## Information architecture
+
+```text
+Queens
+├── Stories (a claim anchored to a place)
+│   ├── Neighborhood
+│   ├── Street address
+│   ├── People
+│   ├── World connections
+│   ├── Sources
+│   └── Related current events
+├── People (recognized figures connected to one or more stories)
+├── World ties (cities and institutions connected back to Queens)
+└── Events (live snapshot from Queens Calendar)
+```
+
+The intended journey is `search → place/story → world connection → related event`, with every primary record reachable within two interactions.
+
+---
+
+# Upstream World Monitor
 
 [简体中文](README.zh-CN.md)
 

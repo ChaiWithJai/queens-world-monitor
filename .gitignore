@@ -1,4 +1,6 @@
 node_modules/
+.playwright-cli/
+dist-queens/
 .idea/
 dist/
 public/blog/

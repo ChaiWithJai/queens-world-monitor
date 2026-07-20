@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#081318" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%228%22 fill=%22%23c8ff4a%22/><text x=%2232%22 y=%2245%22 text-anchor=%22middle%22 font-size=%2242%22 font-family=%22Arial%22 font-weight=%22700%22 fill=%22%23081318%22>Q</text></svg>" />
+    <meta
+      name="description"
+      content="MBIQ Queens World Monitor maps the people, streets, events, and stories that connect Queens to New York City, the United States, and the world."
+    />
+    <title>Queens World Monitor — MBIQ</title>
+  </head>
+  <body>
+    <a class="qm-skip" href="#story-detail">Skip to story details</a>
+    <div id="queens-monitor" class="qm-app">
+      <header class="qm-topbar">
+        <a class="qm-brand" href="/queens.html" aria-label="Queens World Monitor home">
+          <span class="qm-brand-mark" aria-hidden="true">Q</span>
+          <span><strong>QUEENS WORLD MONITOR</strong><small>MBIQ · STREET TO WORLD</small></span>
+        </a>
+        <div class="qm-live"><span aria-hidden="true"></span><strong>QUEENS SIGNAL</strong><small id="data-freshness">CALENDAR SNAPSHOT</small></div>
+        <a class="qm-calendar-link" href="https://queens-calendar.netlify.app" target="_blank" rel="noreferrer" aria-label="Open Queens Calendar in a new tab"><span class="qm-calendar-long">Open Queens Calendar</span><span class="qm-calendar-short" aria-hidden="true">Calendar</span> <span aria-hidden="true">↗</span></a>
+      </header>
+
+      <section class="qm-command" aria-label="Monitor summary">
+        <div><span>STORIES MAPPED</span><strong id="story-count">0</strong></div>
+        <div><span>NEIGHBORHOODS</span><strong id="neighborhood-count">0</strong></div>
+        <div><span>RECOGNIZED PEOPLE</span><strong id="people-count">0</strong></div>
+        <div><span>WORLD TIES</span><strong id="connection-count">0</strong></div>
+        <div class="qm-command-events"><span>UPCOMING EVENTS</span><strong id="event-count">0</strong></div>
+      </section>
+
+      <main class="qm-layout">
+        <aside class="qm-explorer" aria-label="Search Queens stories">
+          <div class="qm-panel-heading">
+            <span>01 / DISCOVER</span>
+            <strong>SEARCH QUEENS</strong>
+          </div>
+          <label class="qm-search" for="queens-search">
+            <span class="qm-search-icon" aria-hidden="true">⌕</span>
+            <input id="queens-search" type="search" placeholder="Neighborhood, street, person, story…" autocomplete="off" />
+            <kbd>⌘ K</kbd>
+          </label>
+          <div class="qm-tabs" role="tablist" aria-label="Search record type">
+            <button type="button" role="tab" aria-selected="true" data-mode="stories">Stories</button>
+            <button type="button" role="tab" aria-selected="false" data-mode="people">People</button>
+            <button type="button" role="tab" aria-selected="false" data-mode="world">World ties</button>
+            <button type="button" role="tab" aria-selected="false" data-mode="events">Events</button>
+          </div>
+          <div class="qm-result-meta"><span id="result-label">STORIES</span><strong id="result-count">0 RESULTS</strong></div>
+          <div id="search-results" class="qm-results" aria-live="polite"></div>
+        </aside>
+
+        <section class="qm-map-stage" aria-labelledby="map-title">
+          <div class="qm-map-heading">
+            <div><span>02 / GEOGRAPHY</span><h1 id="map-title">HOW QUEENS CONNECTS TO THE WORLD</h1></div>
+            <div class="qm-legend" aria-label="Map legend"><span class="story">STORY</span><span class="event">EVENT</span><span class="connection">WORLD TIE</span></div>
+          </div>
+          <div id="queens-map" class="qm-map" aria-label="Interactive map of Queens stories and events"></div>
+          <div class="qm-map-actions">
+            <button id="reset-queens" type="button">Center Queens</button>
+            <button id="trace-world" type="button" disabled>Trace selected story</button>
+          </div>
+          <p class="qm-map-note">Zoom to street level, select a story, then trace its lines outward.</p>
+        </section>
+
+        <aside id="story-detail" class="qm-detail" tabindex="-1" aria-live="polite">
+          <div class="qm-panel-heading">
+            <span>03 / DOSSIER</span>
+            <strong>SELECTED STORY</strong>
+          </div>
+          <div id="detail-content"></div>
+        </aside>
+      </main>
+
+      <section class="qm-event-ribbon" aria-labelledby="events-nearby-title">
+        <div class="qm-ribbon-heading">
+          <div><span>04 / NOW</span><h2 id="events-nearby-title">WHAT’S HAPPENING AROUND THESE STORIES</h2></div>
+          <a href="https://queens-calendar.netlify.app/events" target="_blank" rel="noreferrer">All Queens events ↗</a>
+        </div>
+        <div id="event-ribbon" class="qm-event-scroll"></div>
+      </section>
+
+      <footer class="qm-footer">
+        <span>MBIQ · MEANWHILE, BACK IN QUEENS</span>
+        <span>STORIES REQUIRE SOURCES · EVENTS COME FROM QUEENS CALENDAR</span>
+        <a href="https://github.com/koala73/worldmonitor" target="_blank" rel="noreferrer">BASED ON WORLD MONITOR · AGPL-3.0 ↗</a>
+      </footer>
+    </div>
+    <script type="module" src="/src/queens-main.ts"></script>
+  </body>
+</html>

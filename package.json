@@ -1,7 +1,7 @@
 {
-  "name": "world-monitor",
+  "name": "queens-world-monitor",
   "private": true,
-  "version": "2.10.0",
+  "version": "0.1.0",
   "license": "AGPL-3.0-only",
   "type": "module",
   "scripts": {
@@ -31,6 +31,7 @@
     "docs:stats": "node scripts/docs-stats.mjs",
     "docs:check": "node scripts/docs-stats.mjs --check",
     "dev": "vite",
+    "dev:queens": "vite --config vite.queens.config.ts --open /queens.html",
     "dev:tech": "cross-env VITE_VARIANT=tech vite",
     "dev:finance": "cross-env VITE_VARIANT=finance vite",
     "dev:happy": "cross-env VITE_VARIANT=happy vite",
@@ -55,6 +56,9 @@
     "build:agent-skills": "node scripts/build-agent-skills-index.mjs",
     "prebuild": "npm run build:openapi && npm run build:agent-skills",
     "build": "npm run security:vite-env-secrets -- --strict-local && npm run build:blog && npm run build:crawlable-corpus && npm run build:content-corpus && tsc && vite build",
+    "build:queens": "vite build --config vite.queens.config.ts",
+    "sync:queens-calendar": "node scripts/sync-queens-calendar.mjs",
+    "test:queens": "tsx --test tests/queens-monitor.test.mts",
     "build:sidecar-sebuf": "node scripts/build-sidecar-sebuf.mjs",
     "build:desktop": "npm run security:vite-env-secrets -- --strict-local && node scripts/build-sidecar-sebuf.mjs && node scripts/build-sidecar-handlers.mjs && tsc && vite build",
     "build:full": "npm run security:vite-env-secrets -- --strict-local && npm run build:openapi && npm run build:agent-skills && npm run build:blog && npm run build:crawlable-corpus && npm run build:content-corpus && cross-env-shell VITE_VARIANT=full \"tsc && vite build\"",
