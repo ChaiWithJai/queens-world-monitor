@@ -16,6 +16,8 @@ const [indexHtml, queensHtml, outputFiles] = await Promise.all([
 
 assert.equal(indexHtml, queensHtml, 'root index must match the Queens entrypoint');
 assert.match(indexHtml, /<title>Queens World Monitor — MBIQ<\/title>/);
+assert.match(indexHtml, /class="qm-brand" href="\/"/);
+assert.doesNotMatch(indexHtml, /href="\/queens(?:\.html)?"/);
 assert.match(indexHtml, /src="\/assets\/queens-[^"]+\.js"/);
 assert.match(indexHtml, /href="\/assets\/queens-[^"]+\.css"/);
 assert.ok(outputFiles.some((file) => /^assets\/queens-.+\.js$/.test(file)));
