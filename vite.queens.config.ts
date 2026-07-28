@@ -9,6 +9,10 @@ const emitRootIndex = (): Plugin => ({
       resolve(__dirname, 'dist-queens/queens.html'),
       resolve(__dirname, 'dist-queens/index.html'),
     );
+    copyFileSync(
+      resolve(__dirname, 'src/queens/print-room/assets/print-room-og.jpg'),
+      resolve(__dirname, 'dist-queens/assets/print-room-og.jpg'),
+    );
 
     if (process.env.CONTEXT && process.env.CONTEXT !== 'production') {
       writeFileSync(
@@ -38,6 +42,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         queens: resolve(__dirname, 'queens.html'),
+        'print-room': resolve(__dirname, 'studio/print-room/index.html'),
       },
     },
   },
