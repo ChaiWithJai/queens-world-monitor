@@ -5,13 +5,16 @@ import { join } from 'node:path';
 const outputDirectory = new URL('../dist-queens/', import.meta.url);
 const indexPath = new URL('index.html', outputDirectory);
 const queensPath = new URL('queens.html', outputDirectory);
+const printRoomPath = new URL('studio/print-room/index.html', outputDirectory);
+const printRoomOgPath = new URL('assets/print-room-og.jpg', outputDirectory);
 const deployHeadersPath = new URL('_headers', outputDirectory);
 
-await Promise.all([access(indexPath), access(queensPath)]);
+await Promise.all([access(indexPath), access(queensPath), access(printRoomPath), access(printRoomOgPath)]);
 
-const [indexHtml, queensHtml, outputFiles] = await Promise.all([
+const [indexHtml, queensHtml, printRoomHtml, outputFiles] = await Promise.all([
   readFile(indexPath, 'utf8'),
   readFile(queensPath, 'utf8'),
+  readFile(printRoomPath, 'utf8'),
   readdir(outputDirectory, { recursive: true }),
 ]);
 
@@ -23,6 +26,13 @@ assert.match(indexHtml, /src="\/assets\/queens-[^"]+\.js"/);
 assert.match(indexHtml, /href="\/assets\/queens-[^"]+\.css"/);
 assert.ok(outputFiles.some((file) => /^assets\/queens-.+\.js$/.test(file)));
 assert.ok(outputFiles.some((file) => /^assets\/queens-.+\.css$/.test(file)));
+assert.match(printRoomHtml, /<title>The Queens Print Room — MBIQ<\/title>/);
+assert.match(printRoomHtml, /<meta name="robots" content="noindex, nofollow"/);
+assert.match(printRoomHtml, /src="\/assets\/print-room-[^"]+\.js"/);
+assert.match(printRoomHtml, /href="\/assets\/print-room-[^"]+\.css"/);
+assert.match(printRoomHtml, /content="https:\/\/queens-world-monitor\.netlify\.app\/assets\/print-room-og\.jpg"/);
+assert.ok(outputFiles.some((file) => /^assets\/print-room-.+\.js$/.test(file)));
+assert.ok(outputFiles.some((file) => /^assets\/print-room-.+\.css$/.test(file)));
 
 if (process.env.CONTEXT && process.env.CONTEXT !== 'production') {
   const deployHeaders = await readFile(deployHeadersPath, 'utf8');
